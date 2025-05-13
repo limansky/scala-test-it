@@ -127,6 +127,7 @@ class TestitReporter extends Reporter {
       .setSpaceName(ignored.suiteClassName.map(pkgName).orNull)
       .setExternalId(Utils.getHash(ignored.suiteId + ignored.testName))
 
+    mgr.updateClassContainer(ignored.suiteId, (cc: ClassContainer) => cc.getChildren.add(test.getUuid))
     mgr.scheduleTestCase(result)
     mgr.startTestCase(test.getUuid)
 
