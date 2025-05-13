@@ -25,6 +25,7 @@ class TestitReporter extends Reporter {
       case ts: TestStarting   => testStarting(ts)
       case ts: TestSucceeded  => testSucceeded(ts)
       case tf: TestFailed     => testFailed(tf)
+      case tc: TestCanceled   => testCanceled(tc)
       case ti: TestIgnored    => testIgnored(ti)
       case _                  => println(s"!!!!!!!!!!! Ignore event $event")
     }
@@ -85,28 +86,28 @@ class TestitReporter extends Reporter {
 
   private def testSucceeded(succeeded: TestSucceeded): Unit = {
     logger.debug(s"Test succeeded: ${succeeded.testName}")
-    val test = executableTest.get()
-    test.setAfterStatus()
-    mgr.updateTestCase(
-      test.getUuid,
-      (result: TestResult) => {
-        result.setItemStatus(ItemStatus.PASSED)
-        result.setStop(succeeded.timeStamp)
-      }
-    )
-    mgr.stopTestCase(test.getUuid)
+    stopTest(ItemStatus.PASSED, succeeded.timeStamp, None)
   }
 
   private def testFailed(failed: TestFailed): Unit = {
     logger.debug(s"Test failed: ${failed.testName}")
+    stopTest(ItemStatus.FAILED, failed.timeStamp, failed.throwable)
+  }
+
+  private def testCanceled(canceled: TestCanceled): Unit = {
+    logger.debug(s"Test canceled ${canceled.testName}")
+    stopTest(ItemStatus.BLOCKED, canceled.timeStamp, canceled.throwable)
+  }
+
+  private def stopTest(status: ItemStatus, timestamp: Long, reason: Option[Throwable]): Unit = {
     val test = executableTest.get()
     test.setAfterStatus()
     mgr.updateTestCase(
       test.getUuid,
       (result: TestResult) => {
-        result.setItemStatus(ItemStatus.FAILED)
-        result.setStop(failed.timeStamp)
-        failed.throwable.foreach(result.setThrowable)
+        result.setItemStatus(status)
+        result.setStop(timestamp)
+        reason.foreach(result.setThrowable)
       }
     )
     mgr.stopTestCase(test.getUuid)
