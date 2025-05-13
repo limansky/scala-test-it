@@ -5,4 +5,7 @@
 hs_err_pid*
 .metals
 .bsp
+.bloop
+.idea
+metals.sbt
 target/
