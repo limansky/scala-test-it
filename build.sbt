@@ -18,9 +18,11 @@ lazy val versions = new {
   val testIt    = "2.6.2-TMS-5.3"
 }
 
-ThisBuild / licenses += ("Apache 2.0 License", url("http://www.apache.org/licenses/LICENSE-2.0"))
+ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 ThisBuild / homepage               := Some(url("http://github.com/limansky/scala-test-it"))
 ThisBuild / organization           := "me.limansky"
+ThisBuild / organizationName       := "Mike Limansky"
+ThisBuild / startYear              := Some(2025)
 ThisBuild / publishMavenStyle      := true
 ThisBuild / Test / publishArtifact := false
 ThisBuild / scmInfo                := Some(
