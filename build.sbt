@@ -32,3 +32,4 @@ ThisBuild / scmInfo                := Some(
 ThisBuild / developers             := List(
   Developer("limansky", "Mike Limansky", "mike.limansky@gmail.com", url("http://github.com/limansky"))
 )
+ThisBuild / publishTo              := sonatypePublishToBundle.value
