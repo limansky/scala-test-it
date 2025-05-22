@@ -23,6 +23,7 @@ import ru.testit.services.{ AdapterManager, ConfigManager, ExecutableTest, Utils
 
 import java.util.{ Properties, UUID }
 import org.slf4j.LoggerFactory
+import ru.testit.properties.AppProperties
 
 class TestitReporter extends Reporter {
 
@@ -171,7 +172,11 @@ class TestitReporter extends Reporter {
   private def createAdapterManager: AdapterManager = {
     val props = new Properties()
     val stream = getClass.getClassLoader.getResourceAsStream("testit.properties")
-    props.load(stream)
+    if (stream != null) {
+      props.load(stream)
+    }
+    val tmsProps = AppProperties.loadProperties()
+    props.putAll(tmsProps)
     val cfgManager = new ConfigManager(props)
     new AdapterManager(cfgManager.getClientConfiguration, cfgManager.getAdapterConfig)
   }
