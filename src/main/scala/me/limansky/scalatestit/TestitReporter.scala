@@ -23,7 +23,6 @@ import ru.testit.services.{ AdapterManager, ConfigManager, ExecutableTest, Utils
 
 import java.util.{ Properties, UUID }
 import org.slf4j.LoggerFactory
-import ru.testit.properties.AppProperties
 
 class TestitReporter extends Reporter {
 
@@ -169,7 +168,24 @@ class TestitReporter extends Reporter {
     if (idx != -1) s.substring(0, idx) else ""
   }
 
-  private val envVariables = Map(
+  private def createAdapterManager: AdapterManager = {
+    val props = new Properties()
+    val stream = getClass.getClassLoader.getResourceAsStream("testit.properties")
+    if (stream != null) {
+      props.load(stream)
+    }
+    TestitReporter.ENV_VARIABLES.foreach {
+      case (env, prop) =>
+        val v = System.getenv(env)
+        if (v != null) props.setProperty(prop, v)
+    }
+    val cfgManager = new ConfigManager(props)
+    new AdapterManager(cfgManager.getClientConfiguration, cfgManager.getAdapterConfig)
+  }
+}
+
+object TestitReporter {
+  val ENV_VARIABLES: Map[String, String] = Map(
     "TMS_PRIVATE_TOKEN" -> "privateToken",
     "TMS_URL" -> "url",
     "TMS_PROJECT_ID" -> "projectId",
@@ -183,19 +199,4 @@ class TestitReporter extends Reporter {
     "TMS_TEST_IT" -> "testIt",
     "TMS_IMPORT_REALTIME" -> "importRealtime"
   )
-
-  private def createAdapterManager: AdapterManager = {
-    val props = new Properties()
-    val stream = getClass.getClassLoader.getResourceAsStream("testit.properties")
-    if (stream != null) {
-      props.load(stream)
-    }
-    envVariables.foreach {
-      case (env, prop) =>
-        val v = System.getenv(env)
-        if (v != null) props.setProperty(prop, v)
-    }
-    val cfgManager = new ConfigManager(props)
-    new AdapterManager(cfgManager.getClientConfiguration, cfgManager.getAdapterConfig)
-  }
 }
