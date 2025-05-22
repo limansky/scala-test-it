@@ -169,14 +169,32 @@ class TestitReporter extends Reporter {
     if (idx != -1) s.substring(0, idx) else ""
   }
 
+  private val envVariables = Map(
+    "TMS_PRIVATE_TOKEN" -> "privateToken",
+    "TMS_URL" -> "url",
+    "TMS_PROJECT_ID" -> "projectId",
+    "TMS_CONFIGURATION_ID" -> "configurationId",
+    "TMS_TEST_RUN_ID" -> "testRunId",
+    "TMS_TEST_RUN_NAME" -> "testRunName",
+    "TMS_ADAPTER_MODE" -> "adapterMode",
+    "TMS_CERT_VALIDATION" -> "certValidation",
+    "TMS_AUTOMATIC_CREATION_TEST_CASES" -> "automaticCreationTestCases",
+    "AUTOMATIC_UPDATION_LINKS_TO_TEST_CASES" -> "automaticUpdationLinksToTestCases",
+    "TMS_TEST_IT" -> "testIt",
+    "TMS_IMPORT_REALTIME" -> "importRealtime"
+  )
+
   private def createAdapterManager: AdapterManager = {
     val props = new Properties()
     val stream = getClass.getClassLoader.getResourceAsStream("testit.properties")
     if (stream != null) {
       props.load(stream)
     }
-    val tmsProps = AppProperties.loadProperties()
-    props.putAll(tmsProps)
+    envVariables.foreach {
+      case (env, prop) =>
+        val v = System.getenv(env)
+        if (v != null) props.setProperty(prop, v)
+    }
     val cfgManager = new ConfigManager(props)
     new AdapterManager(cfgManager.getClientConfiguration, cfgManager.getAdapterConfig)
   }
