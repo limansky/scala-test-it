@@ -19,7 +19,7 @@ package me.limansky.sbttestit
 import sbt.*
 import sbt.Keys.*
 
-object SbtTestIt extends AutoPlugin {
+object TestItPlugin extends AutoPlugin {
   object autoImport {
     val testItEnabled = settingKey[Boolean]("Enable test it reports")
   }
@@ -33,6 +33,13 @@ object SbtTestIt extends AutoPlugin {
     Test / testOptions ++= {
       if ((Test / testItEnabled).value)
         Seq(Tests.Argument("-C", "me.limansky.scalatestit.TestitReporter"))
+      else Seq.empty
+    },
+    libraryDependencies ++= {
+      if ((Test / testItEnabled).value)
+        Seq(
+          "me.limansky" %% "scala-test-it" % BuildInfo.version
+        )
       else Seq.empty
     }
   )

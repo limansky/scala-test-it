@@ -29,9 +29,11 @@ lazy val sbtPlugin = (project in file("sbt-plugin"))
         case "2.12" => "1.2.8"
         case _      => "2.0.0-M4"
       }
-    }
+    },
+    buildInfoKeys                 := Seq(version),
+    buildInfoPackage              := "me.limansky.sbttestit"
   )
-  .enablePlugins(SbtPlugin)
+  .enablePlugins(SbtPlugin, BuildInfoPlugin)
 
 lazy val versions = new {
   val scala212  = "2.12.20"
