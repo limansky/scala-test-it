@@ -1,4 +1,14 @@
-lazy val scalatest = (project in file("."))
+lazy val scalaTestIt = (project in file("."))
+  .aggregate(scalatest, sbtPlugin)
+  .settings(
+    publish / skip  := true,
+    publish         := (()),
+    publishLocal    := (()),
+    publishArtifact := false,
+    publishTo       := None
+  )
+
+lazy val scalatest = (project in file("scalatest"))
   .settings(
     name               := "scala-test-it",
     scalaVersion       := versions.scala213,
@@ -9,10 +19,25 @@ lazy val scalatest = (project in file("."))
     )
   )
 
+lazy val sbtPlugin = (project in file("sbt-plugin"))
+  .settings(
+    name                          := "sbt-test-it",
+    scalaVersion                  := versions.scala212,
+    crossScalaVersions            := List(versions.scala212, versions.scala3sbt),
+    pluginCrossBuild / sbtVersion := {
+      scalaBinaryVersion.value match {
+        case "2.12" => "1.2.8"
+        case _      => "2.0.0-M4"
+      }
+    }
+  )
+  .enablePlugins(SbtPlugin)
+
 lazy val versions = new {
-  val scala212 = "2.12.20"
-  val scala213 = "2.13.16"
-  val scala3   = "3.3.6"
+  val scala212  = "2.12.20"
+  val scala213  = "2.13.16"
+  val scala3    = "3.3.6"
+  val scala3sbt = "3.6.4"
 
   val scalatest = "3.2.19"
   val testIt    = "2.6.2-TMS-5.3"
@@ -35,3 +60,9 @@ ThisBuild / developers             := List(
   Developer("limansky", "Mike Limansky", "mike.limansky@gmail.com", url("http://github.com/limansky"))
 )
 ThisBuild / publishTo              := sonatypePublishToBundle.value
+ThisBuild / scalacOptions          := {
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, _)) => List("-deprecation", "-unchecked", "-feature", "-Xlint")
+    case _            => List("-deprecation", "-unchecked", "-feature")
+  }
+}
