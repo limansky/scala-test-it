@@ -40,7 +40,7 @@ jobs:
       run: sbt scalafmtCheckAll scalafmtSbtCheck
 
     - name: Run tests
-      run: sbt --client '++${{ matrix.scala }} clean; test'
+      run: sbt '++${{ matrix.scala }} clean; test'
 
   publish:
     name: Publish artifacts
@@ -71,7 +71,7 @@ jobs:
 
     - name: Publish snapshot
       if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-      run: sbt --client +publish
+      run: sbt +publish
       env:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
@@ -85,7 +85,7 @@ jobs:
 
     - name: Publish release
       if: startsWith(github.ref, 'refs/tags/v')
-      run: sbt --client +publishSigned sonatypeBundleRelease
+      run: sbt '+publishSigned; sonatypeBundleRelease'
       env:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USER }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
