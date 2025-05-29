@@ -14,7 +14,7 @@ lazy val scalatest = (project in file("scalatest"))
     scalaVersion       := versions.scala213,
     crossScalaVersions := Seq(versions.scala212, versions.scala213, versions.scala3),
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest"           % versions.scalatest,
+      "org.scalatest" %% "scalatest-core"      % versions.scalatest,
       "ru.testit"      % "testit-java-commons" % versions.testIt
     )
   )
