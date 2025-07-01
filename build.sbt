@@ -61,7 +61,12 @@ ThisBuild / scmInfo                := Some(
 ThisBuild / developers             := List(
   Developer("limansky", "Mike Limansky", "mike.limansky@gmail.com", url("http://github.com/limansky"))
 )
-ThisBuild / publishTo              := sonatypePublishToBundle.value
+ThisBuild / publishTo              := {
+  val centralSnapshots = "https://central.sonatype.com/repository/maven-snapshots/"
+  if (isSnapshot.value) Some("central-snapshots" at centralSnapshots)
+  else localStaging.value
+}
+
 ThisBuild / scalacOptions          := {
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, _)) => List("-deprecation", "-unchecked", "-feature", "-Xlint")
