@@ -67,7 +67,7 @@ ThisBuild / publishTo              := {
   else localStaging.value
 }
 
-ThisBuild / scalacOptions          := {
+ThisBuild / scalacOptions := {
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, _)) => List("-deprecation", "-unchecked", "-feature", "-Xlint")
     case _            => List("-deprecation", "-unchecked", "-feature")
