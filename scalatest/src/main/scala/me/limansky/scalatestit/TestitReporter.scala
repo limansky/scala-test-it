@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory
 
 class TestitReporter extends Reporter {
 
-  private lazy val logger = LoggerFactory.getLogger(getClass())
+  private lazy val logger = LoggerFactory.getLogger(getClass)
   private val mgr = createAdapterManager
   private val launchId = UUID.randomUUID().toString
 
@@ -176,8 +176,10 @@ class TestitReporter extends Reporter {
     }
     TestitReporter.ENV_VARIABLES.foreach {
       case (env, prop) =>
-        val v = System.getenv(env)
-        if (v != null) props.setProperty(prop, v)
+        val sysPropName = "tms" + prop.capitalize
+        val sv = Option(System.getProperty(sysPropName))
+        val ev = Option(System.getenv(env))
+        sv.orElse(ev).foreach(v => props.setProperty(prop, v))
     }
     val cfgManager = new ConfigManager(props)
     new AdapterManager(cfgManager.getClientConfiguration, cfgManager.getAdapterConfig)
