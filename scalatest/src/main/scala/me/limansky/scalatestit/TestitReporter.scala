@@ -18,16 +18,16 @@ package me.limansky.scalatestit
 
 import org.scalatest.Reporter
 import org.scalatest.events._
-import ru.testit.models.{ ClassContainer, ItemStatus, MainContainer, TestResult }
-import ru.testit.services.{ AdapterManager, ConfigManager, ExecutableTest, Utils }
-
-import java.util.{ Properties, UUID }
 import org.slf4j.LoggerFactory
+import ru.testit.models.{ ClassContainer, ItemStatus, MainContainer, TestResult }
+import ru.testit.services.{ ExecutableTest, Utils }
+
+import java.util.UUID
 
 class TestitReporter extends Reporter {
 
   private lazy val logger = LoggerFactory.getLogger(getClass)
-  private val mgr = createAdapterManager
+  private val mgr = TestItUtils.createAdapterManager()
   private val launchId = UUID.randomUUID().toString
 
   private val executableTest: ThreadLocal[ExecutableTest] = ThreadLocal.withInitial(() => new ExecutableTest)
@@ -167,38 +167,4 @@ class TestitReporter extends Reporter {
     val idx = s.lastIndexOf('.')
     if (idx != -1) s.substring(0, idx) else ""
   }
-
-  private def createAdapterManager: AdapterManager = {
-    val props = new Properties()
-    val stream = getClass.getClassLoader.getResourceAsStream("testit.properties")
-    if (stream != null) {
-      props.load(stream)
-    }
-    TestitReporter.ENV_VARIABLES.foreach {
-      case (env, prop) =>
-        val sysPropName = "tms" + prop.capitalize
-        val sv = Option(System.getProperty(sysPropName))
-        val ev = Option(System.getenv(env))
-        sv.orElse(ev).foreach(v => props.setProperty(prop, v))
-    }
-    val cfgManager = new ConfigManager(props)
-    new AdapterManager(cfgManager.getClientConfiguration, cfgManager.getAdapterConfig)
-  }
-}
-
-object TestitReporter {
-  val ENV_VARIABLES: Map[String, String] = Map(
-    "TMS_PRIVATE_TOKEN" -> "privateToken",
-    "TMS_URL" -> "url",
-    "TMS_PROJECT_ID" -> "projectId",
-    "TMS_CONFIGURATION_ID" -> "configurationId",
-    "TMS_TEST_RUN_ID" -> "testRunId",
-    "TMS_TEST_RUN_NAME" -> "testRunName",
-    "TMS_ADAPTER_MODE" -> "adapterMode",
-    "TMS_CERT_VALIDATION" -> "certValidation",
-    "TMS_AUTOMATIC_CREATION_TEST_CASES" -> "automaticCreationTestCases",
-    "AUTOMATIC_UPDATION_LINKS_TO_TEST_CASES" -> "automaticUpdationLinksToTestCases",
-    "TMS_TEST_IT" -> "testIt",
-    "TMS_IMPORT_REALTIME" -> "importRealtime"
-  )
 }

@@ -16,7 +16,10 @@
 
 package me.limansky.scalatestit
 
+import me.limansky.scalatestit.TestitFramework.TEST_RUN_PROP_NAME
 import sbt.testing.{ Fingerprint, Framework, Runner }
+
+import scala.jdk.CollectionConverters._
 
 abstract class TestitFramework(inner: Framework) extends Framework {
 
@@ -27,8 +30,25 @@ abstract class TestitFramework(inner: Framework) extends Framework {
   override def fingerprints(): Array[Fingerprint] = inner.fingerprints()
 
   override def runner(args: Array[String], remoteArgs: Array[String], testClassLoader: ClassLoader): Runner = {
-    inner.runner(args, remoteArgs, testClassLoader)
+    val extraArgs = getTestRunId(args).map(id => testIdsToArgs(getTestIds(id))).getOrElse(Nil)
+
+    inner.runner(args ++ extraArgs, remoteArgs, testClassLoader)
   }
 
-  private def parseArgs(args: Array[String])
+  private def getTestIds(id: String): Seq[String] = {
+    val mgr = TestItUtils.createAdapterManager(Some(id))
+
+    mgr.getTestFromTestRun.asScala.toSeq
+  }
+
+  private def getTestRunId(args: Array[String]): Option[String] = {
+    val id = args.indexOf("--testRunId")
+    val fromArgs = Option.when(id != -1 && id < args.length - 2)(args(id + 1))
+
+    fromArgs orElse Option(System.getProperty(TEST_RUN_PROP_NAME)) orElse Option(System.getenv(TEST_RUN_PROP_NAME))
+  }
+}
+
+object TestitFramework {
+  val TEST_RUN_PROP_NAME = "TMS_TEST_RUN_ID"
 }
