@@ -27,7 +27,7 @@ lazy val sbtPlugin = (project in file("sbt-plugin"))
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {
         case "2.12" => "1.2.8"
-        case _      => "2.0.0-M4"
+        case _      => "2.0.0-RC4"
       }
     },
     buildInfoKeys                 := Seq(version),
@@ -39,10 +39,10 @@ lazy val versions = new {
   val scala212  = "2.12.20"
   val scala213  = "2.13.16"
   val scala3    = "3.3.6"
-  val scala3sbt = "3.6.4"
+  val scala3sbt = "3.7.2"
 
   val scalatest = "3.2.19"
-  val testIt    = "2.7.1-TMS-CLOUD"
+  val testIt    = "2.7.2-TMS-CLOUD"
 }
 
 ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
