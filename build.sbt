@@ -42,7 +42,7 @@ lazy val versions = new {
   val scala3sbt = "3.7.2"
 
   val scalatest = "3.2.19"
-  val testIt    = "2.7.2-TMS-CLOUD"
+  val testIt    = "2.7.10"
 }
 
 ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
