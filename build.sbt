@@ -13,6 +13,7 @@ lazy val scalatest = (project in file("scalatest"))
     name               := "scala-test-it",
     scalaVersion       := versions.scala213,
     crossScalaVersions := Seq(versions.scala212, versions.scala213, versions.scala3),
+    scalacOptions      := scalacOptionsFor(scalaVersion.value),
     libraryDependencies ++= Seq(
       "org.scalatest" %% "scalatest-core"      % versions.scalatest,
       "ru.testit"      % "testit-java-commons" % versions.testIt
@@ -27,19 +28,20 @@ lazy val sbtPlugin = (project in file("sbt-plugin"))
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {
         case "2.12" => "1.2.8"
-        case _      => "2.0.0-RC4"
+        case _      => "2.0.0-RC9"
       }
     },
+    scalacOptions                 := scalacOptionsFor(scalaVersion.value),
     buildInfoKeys                 := Seq(version),
     buildInfoPackage              := "me.limansky.sbttestit"
   )
   .enablePlugins(SbtPlugin, BuildInfoPlugin)
 
 lazy val versions = new {
-  val scala212  = "2.12.20"
-  val scala213  = "2.13.16"
-  val scala3    = "3.3.6"
-  val scala3sbt = "3.7.2"
+  val scala212  = "2.12.21"
+  val scala213  = "2.13.18"
+  val scala3    = "3.3.7"
+  val scala3sbt = "3.8.2"
 
   val scalatest = "3.2.19"
   val testIt    = "2.7.10"
@@ -66,9 +68,9 @@ ThisBuild / publishTo              := {
   else localStaging.value
 }
 
-ThisBuild / scalacOptions := {
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, _)) => List("-deprecation", "-unchecked", "-feature", "-Xlint")
+def scalacOptionsFor(scalaVersion: String) = {
+  CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, _)) => List("-deprecation", "-unchecked", "-feature", "-Xlint", "-release:8")
     case _            => List("-deprecation", "-unchecked", "-feature")
   }
 }
