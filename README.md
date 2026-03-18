@@ -1,6 +1,7 @@
 # scala-test-it
 
 [![Build Status](https://github.com/limansky/scala-test-it/actions/workflows/ci.yaml/badge.svg)](https://github.com/limansky/scala-test-it/actions/workflows/ci.yaml)
+[![Maven Central](https://img.shields.io/maven-central/v/me.limansky/scala-test-it_2.13.svg)](https://maven-badges.herokuapp.com/maven-central/me.limansky/scala-test-it_2.13)
 
 [ScalaTest][scalatest] and [TestIt][testit] integration.
 
