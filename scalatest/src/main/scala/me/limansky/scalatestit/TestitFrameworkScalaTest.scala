@@ -18,9 +18,4 @@ package me.limansky.scalatestit
 
 import org.scalatest.tools.Framework
 
-class TestitFrameworkScalaTest extends TestitFramework(new Framework) {
-  override def testIdsToArgs(ids: Seq[String]): Seq[String] = {
-    println(s"!!!!!: IDS = $ids")
-    Nil
-  }
-}
+class TestitFrameworkScalaTest extends TestitFramework(new Framework)

@@ -19,31 +19,25 @@ package me.limansky.scalatestit
 import me.limansky.scalatestit.TestitFramework.TEST_RUN_PROP_NAME
 import sbt.testing.{ Fingerprint, Framework, Runner }
 
-import scala.jdk.CollectionConverters._
-
 abstract class TestitFramework(inner: Framework) extends Framework {
-
-  def testIdsToArgs(ids: Seq[String]): Seq[String]
 
   override def name: String = s"TestIt-${inner.name}"
 
   override def fingerprints(): Array[Fingerprint] = inner.fingerprints()
 
   override def runner(args: Array[String], remoteArgs: Array[String], testClassLoader: ClassLoader): Runner = {
-    val extraArgs = getTestRunId(args).map(id => testIdsToArgs(getTestIds(id))).getOrElse(Nil)
 
-    inner.runner(args ++ extraArgs, remoteArgs, testClassLoader)
-  }
+    val innerRunner = inner.runner(args, remoteArgs, testClassLoader)
 
-  private def getTestIds(id: String): Seq[String] = {
-    val mgr = TestItUtils.createAdapterManager(Some(id))
-
-    mgr.getTestFromTestRun.asScala.toSeq
+    getTestRunId(args) match {
+      case Some(id) => new TestitRunner(innerRunner, id)
+      case None     => innerRunner
+    }
   }
 
   private def getTestRunId(args: Array[String]): Option[String] = {
     val id = args.indexOf("--testRunId")
-    val fromArgs = Option.when(id != -1 && id < args.length - 2)(args(id + 1))
+    val fromArgs = if (id != -1 && id < args.length - 2) Some(args(id + 1)) else None
 
     fromArgs orElse Option(System.getProperty(TEST_RUN_PROP_NAME)) orElse Option(System.getenv(TEST_RUN_PROP_NAME))
   }
