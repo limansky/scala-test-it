@@ -30,7 +30,7 @@ abstract class TestitFramework(inner: Framework) extends Framework {
     val innerRunner = inner.runner(args, remoteArgs, testClassLoader)
 
     getTestRunId(args) match {
-      case Some(id) => new TestitRunner(innerRunner, id)
+      case Some(id) => new TestitRunner(innerRunner, id, testClassLoader)
       case None     => innerRunner
     }
   }
