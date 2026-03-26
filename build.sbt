@@ -15,8 +15,10 @@ lazy val scalatest = (project in file("scalatest"))
     crossScalaVersions := Seq(versions.scala212, versions.scala213, versions.scala3),
     scalacOptions      := scalacOptionsFor(scalaVersion.value),
     libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest-core"      % versions.scalatest,
-      "ru.testit"      % "testit-java-commons" % versions.testIt
+      "org.scala-sbt"           % "test-interface"          % "1.0",
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.14.0",
+      "org.scalatest"          %% "scalatest-core"          % versions.scalatest,
+      "ru.testit"               % "testit-java-commons"     % versions.testIt
     )
   )
 
@@ -43,8 +45,8 @@ lazy val versions = new {
   val scala3    = "3.3.7"
   val scala3sbt = "3.8.2"
 
-  val scalatest = "3.2.19"
-  val testIt    = "2.10.5"
+  val scalatest = "3.2.20"
+  val testIt    = "2.10.6"
 }
 
 ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))

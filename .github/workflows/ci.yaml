@@ -37,7 +37,7 @@ jobs:
         key: ${{ runner.os }}-sbt-cache-v2-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
 
     - name: Verify formatting
-      run: sbt scalafmtCheckAll scalafmtSbtCheck
+      run: sbt scalafmtCheckAll scalafmtSbtCheck headerCheck
 
     - name: Run tests
       run: sbt '++${{ matrix.scala }} clean; test'
