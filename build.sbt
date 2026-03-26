@@ -45,7 +45,7 @@ lazy val versions = new {
   val scala3    = "3.3.7"
   val scala3sbt = "3.8.2"
 
-  val scalatest = "3.2.19"
+  val scalatest = "3.2.20"
   val testIt    = "2.10.6"
 }
 
