@@ -31,7 +31,7 @@ class TestitRunner(inner: Runner, testRunId: String, classLoader: ClassLoader) e
       val suite = suiteClass.getDeclaredConstructor().newInstance().asInstanceOf[Suite]
       val testNames = suite.testNames.map(name => Utils.getHash(suite.suiteId + name) -> name).toMap
 
-      val selectors = testNames.view.filterKeys(ids.apply).values.map(name => new TestSelector(name))
+      val selectors = testNames.filter(kv => ids(kv._1)).map(kv => new TestSelector(kv._2))
 
       if (selectors.nonEmpty) {
         Some(new TaskDef(td.fullyQualifiedName(), td.fingerprint(), td.explicitlySpecified(), selectors.toArray))
