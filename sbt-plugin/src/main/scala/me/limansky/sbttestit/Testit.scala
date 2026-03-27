@@ -35,7 +35,11 @@ object TestItPlugin extends AutoPlugin {
         Seq(Tests.Argument("-C", "me.limansky.scalatestit.TestitReporter"))
       else Seq.empty
     },
-    Test / testFrameworks := Seq(TestFramework("me.limansky.scalatestit.TestitFrameworkScalaTest")),
+    Test / testFrameworks := {
+      if ((Test / testItEnabled).value)
+        Seq(TestFramework("me.limansky.scalatestit.TestitFrameworkScalaTest"))
+      else (Test / testFrameworks).value
+    },
     libraryDependencies ++= {
       if ((Test / testItEnabled).value)
         Seq(
