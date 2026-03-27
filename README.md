@@ -6,8 +6,10 @@
 [ScalaTest][scalatest] and [TestIt][testit] integration.
 
 > [!WARNING]
-> The project is in the early stage of devepment.  Lot of functionality isn't supported yet.
+> The project is in the early stage of development.  Lot of functionality isn't supported yet.
 > API is not stable, however as an end user you need to use only a small part of it.
+
+## Setup
 
 The simplest way to use this is via sbt plugin.  Both sbt 1.x and upcoming 2.x are supported.
 
@@ -31,6 +33,14 @@ or via system properties.  The system properties have biggest priority, and the 
 You can also mix all of the approaches, for example, if you don't want to store private keys in the repository.
 
 You can find settings description at [TestIt JUnit 5 Adapter readme](https://github.com/testit-tms/adapters-java/tree/main/testit-adapter-junit5#configuration).
+
+## Implementation details and features
+
+ - `TestitReporter` - ScalaTest reporter collecting test run events and passing them to Test IT server.
+   So, Test IT test run status will be updating as the tests progress.
+
+ - `TestitScalatestFramework` - implementation of sbt test framework for Test IT integration, allowing
+   to filter out tests only selected for the test run.
 
 
 [scalatest]: https://www.scalatest.org/
