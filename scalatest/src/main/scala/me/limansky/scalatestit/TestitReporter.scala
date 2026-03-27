@@ -43,7 +43,7 @@ class TestitReporter extends Reporter {
       case tf: TestFailed     => testFailed(tf)
       case tc: TestCanceled   => testCanceled(tc)
       case ti: TestIgnored    => testIgnored(ti)
-      case _                  => println(s"!!!!!!!!!!! Ignore event $event")
+      case _                  => logger.info(s"Ignore event $event")
     }
   }
 
