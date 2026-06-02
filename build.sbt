@@ -30,7 +30,7 @@ lazy val sbtPlugin = (project in file("sbt-plugin"))
     pluginCrossBuild / sbtVersion := {
       scalaBinaryVersion.value match {
         case "2.12" => "1.2.8"
-        case _      => "2.0.0-RC9"
+        case _      => "2.0.0-RC14"
       }
     },
     scalacOptions                 := scalacOptionsFor(scalaVersion.value),
@@ -43,7 +43,7 @@ lazy val versions = new {
   val scala212  = "2.12.21"
   val scala213  = "2.13.18"
   val scala3    = "3.3.7"
-  val scala3sbt = "3.8.2"
+  val scala3sbt = "3.8.3"
 
   val scalatest = "3.2.20"
   val testIt    = "2.10.6"
